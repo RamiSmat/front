@@ -1,17 +1,36 @@
 import React, { useState } from 'react';
 import EmprunterPopup from './EmprunterOuvragePopup';
 
-const AbonneCard = ({ abonne }) => {
+const AbonneCard = ({ abonne, onDeleteAbonne }) => {
   const [buttonText, setButtonText] = useState(abonne.ouvrage ? 'Rendre Ouvrage' : 'Emprunter Ouvrage');
   const [showPopup, setShowPopup] = useState(false);
   const [isOuvrageTaken, setIsOuvrageTaken] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
+  
   const getUserAvatar = () => {
     const gender = abonne.cin % 2 === 0 ? 'women' : 'men';
     return `https://randomuser.me/api/portraits/${gender}/${abonne.cin}.jpg`;
   };
+  const handleDeleteButtonClick = () => {
+    deleteAbonne(abonne.cin);
+  };
+  const deleteAbonne = async (cin) => {
+    try {
+      const response = await fetch(`http://localhost:8080/BibliothequeWEB1/deleteAbonne/${cin}`, {
+        method: 'DELETE',
+      });
 
+      if (response.ok) {
+        console.log(`Abonne with CIN ${cin} deleted successfully`);
+        onDeleteAbonne(cin);
+       
+      } else {
+        throw new Error('Failed to delete abonne');
+      }
+    } catch (error) {
+      console.error('Error deleting abonne:', error);
+    }
+  };
   const fetchOuvrageByTitle = async (title) => {
     try {
       const response = await fetch(`http://localhost:8080/BibliothequeWEB1/${encodeURIComponent(title)}`);
@@ -105,6 +124,10 @@ const AbonneCard = ({ abonne }) => {
         {buttonText}
       </button>
 
+      <button onClick={handleDeleteButtonClick} className="bn632-hover bn26">
+        Supprimer Abonne
+      </button>
+
       {showPopup && (
         <EmprunterPopup
           onEmprunterSubmit={(title) => emprunterOuvrage(abonne.cin, title)}
@@ -116,5 +139,6 @@ const AbonneCard = ({ abonne }) => {
     </div>
   );
 };
+
 
 export default AbonneCard;

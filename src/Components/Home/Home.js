@@ -7,7 +7,8 @@ const Home = () => {
             <img src='./logo.png' alt="Description" className="welcome-image" />
             <span className="first-line-bold">Projet JEE Bibliotheque</span>
             <br />
-            Travail de Rami Smat et Insaf Khatrouch
+            <br />
+            Travail de <b>Rami Smat</b> et <b>Insaf Khatrouch</b>
           </div>
         </div>
       </div>

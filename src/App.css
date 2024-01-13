@@ -3,18 +3,21 @@ body {
   font-family: 'Arial', sans-serif;
   background-color: #f4f4f4;
 }
-body, html {
-  height: 100vh;
- 
 
+body, html {
+  height: 100%;
 }
+
 .app {
   display: flex;
-  height: 100vh;
+  min-height: 100vh; /* Use min-height instead of height */
+ 
 }
 .sidebar-container {
-  height: 100vh;
- 
+  height: 100%;
+  display:flex;
+
+  
 }
 .addButton{
   width:100%;
@@ -431,6 +434,9 @@ body, html {
 .content {
   flex: 1;
   padding: 20px;
+  height: 100%; /* Set height to 100% of the parent container (.app) */
+  
+  flex-grow: 1;
 }
 
 .wide-container {
@@ -534,19 +540,20 @@ body, html {
 .suggestions-container {
   max-height: 200px; /* Set a maximum height for the suggestions container */
   overflow-y: auto; /* Enable vertical scrolling if needed */
-  margin-top: 10px; /* Adjust the margin as needed */
+  margin-top: 10px; 
+  /* Adjust the margin as needed */
 }
-.suggestions-container:hover{
-  color:white;
-}
+
 .suggestion-card {
-  background-color: #fff; /* Set background color */
+  background-color: #b5cfdb; /* Set background color */
   padding: 10px; /* Set padding */
   border: 1px solid #ccc; /* Add a border for separation */
-  border-radius: 4px; /* Add rounded corners */
+  border-radius: 15px; /* Add rounded corners */
   margin-bottom: 5px; /* Adjust the margin between suggestion cards */
   cursor: pointer; /* Change cursor on hover to indicate interactivity */
 }
+
+
 /* App.css */
 
 .ajouter-ouvrage-container {
@@ -600,11 +607,7 @@ body, html {
   cursor: not-allowed;
 }
 
-.suggestion-card:hover {
-  background: rgb(27,137,162);
-  background: linear-gradient(90deg, rgba(27,137,162,1) 1%, rgba(0,212,255,1) 100%);
-color:white; /* Change background color on hover */
-}
+
 .abonne-card h3 {
   font-size: 1.2rem;
   margin-bottom: 5px;

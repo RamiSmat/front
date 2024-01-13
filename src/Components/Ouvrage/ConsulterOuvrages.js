@@ -19,7 +19,24 @@ const ConsulterOuvrages = () => {
 
     fetchData();
   }, [searchTitle]);
-
+  const handleDeleteOuvrage = async (titre) => {
+    try {
+      const response = await fetch(`http://localhost:8080/BibliothequeWEB1/${encodeURIComponent(titre)}`, {
+        method: 'DELETE',
+      });
+  
+      if (response.ok) {
+        console.log(`Ouvrage with titre ${titre} deleted successfully`);
+        
+        // Update the state to remove the deleted ouvrage
+        setOuvrages(prevOuvrages => prevOuvrages.filter(ouvrage => ouvrage.titre !== titre));
+      } else {
+        throw new Error('Failed to delete ouvrage');
+      }
+    } catch (error) {
+      console.error('Error deleting ouvrage:', error);
+    }
+  };
   const handleSearchChange = (event) => {
     setSearchTitle(event.target.value);
   };
@@ -45,7 +62,7 @@ const ConsulterOuvrages = () => {
       </div>
       <div className="abonne-list">
         {ouvrages.map((ouvrage) => (
-          <OuvrageCard key={ouvrage.id} ouvrage={ouvrage} />
+          <OuvrageCard key={ouvrage.id} ouvrage={ouvrage}  onDeleteClick={handleDeleteOuvrage} />
         ))}
       </div>
     </div>

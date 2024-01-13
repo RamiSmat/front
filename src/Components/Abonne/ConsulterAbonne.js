@@ -20,7 +20,7 @@ const ConsulterAbonne = () => {
 
     fetchData();
   }, [searchCin]);
-
+  
   const handleSearchChange = (event) => {
     setSearchCin(event.target.value);
   };
@@ -30,6 +30,9 @@ const ConsulterAbonne = () => {
    
   };
 
+  const handleDeleteAbonne = (cin) => {
+    setAbonnes((prevAbonnes) => prevAbonnes.filter((abonne) => abonne.cin !== cin));
+  };
   return (
     <div>
       <div className="wide-container">
@@ -45,7 +48,7 @@ const ConsulterAbonne = () => {
       </div>
       <div className="abonne-list">
         {abonnes.map((abonne) => (
-          <AbonneCard key={abonne.cin} abonne={abonne} />
+          <AbonneCard key={abonne.cin} abonne={abonne} onDeleteAbonne={handleDeleteAbonne} />
         ))}
       </div>
     </div>
