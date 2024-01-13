@@ -456,7 +456,28 @@ body {
 .center-container h2 {
   margin-top: 20px;
 }
+.suggestions-container {
+  max-height: 200px; /* Set a maximum height for the suggestions container */
+  overflow-y: auto; /* Enable vertical scrolling if needed */
+  margin-top: 10px; /* Adjust the margin as needed */
+}
+.suggestions-container:hover{
+  color:white;
+}
+.suggestion-card {
+  background-color: #fff; /* Set background color */
+  padding: 10px; /* Set padding */
+  border: 1px solid #ccc; /* Add a border for separation */
+  border-radius: 4px; /* Add rounded corners */
+  margin-bottom: 5px; /* Adjust the margin between suggestion cards */
+  cursor: pointer; /* Change cursor on hover to indicate interactivity */
+}
 
+.suggestion-card:hover {
+  background: rgb(27,137,162);
+  background: linear-gradient(90deg, rgba(27,137,162,1) 1%, rgba(0,212,255,1) 100%);
+color:white; /* Change background color on hover */
+}
 .abonne-card h3 {
   font-size: 1.2rem;
   margin-bottom: 5px;

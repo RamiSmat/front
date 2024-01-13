@@ -1,14 +1,31 @@
-
 import React, { useState } from 'react';
 import EmprunterPopup from './EmprunterOuvragePopup';
 
 const AbonneCard = ({ abonne }) => {
   const [buttonText, setButtonText] = useState(abonne.ouvrage ? 'Rendre Ouvrage' : 'Emprunter Ouvrage');
   const [showPopup, setShowPopup] = useState(false);
+  const [isOuvrageTaken, setIsOuvrageTaken] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const getUserAvatar = () => {
     const gender = abonne.cin % 2 === 0 ? 'women' : 'men';
     return `https://randomuser.me/api/portraits/${gender}/${abonne.cin}.jpg`;
+  };
+
+  const fetchOuvrageByTitle = async (title) => {
+    try {
+      const response = await fetch(`http://localhost:8080/BibliothequeWEB1/${encodeURIComponent(title)}`);
+      if (response.ok) {
+        const ouvrage = await response.json();
+        return ouvrage;
+      } else {
+        console.log(`Error fetching ouvrage for title ${title}`);
+        return null;
+      }
+    } catch (error) {
+      console.error('Error fetching ouvrage:', error);
+      return null;
+    }
   };
 
   const handleButtonClick = () => {
@@ -21,6 +38,8 @@ const AbonneCard = ({ abonne }) => {
 
   const handleClosePopup = () => {
     setShowPopup(false);
+    setIsOuvrageTaken(false);
+    setErrorMessage('');
   };
 
   const rendreOuvrage = (cin) => {
@@ -42,22 +61,33 @@ const AbonneCard = ({ abonne }) => {
       });
   };
 
-  const emprunterOuvrage = (cin, title) => {
-    fetch(`http://localhost:8080/BibliothequeWEB1/emprunter/${title}/${cin}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(response => {
-        if (!response.ok) {
+  const emprunterOuvrage = async (cin, title) => {
+    try {
+      const ouvrage = await fetchOuvrageByTitle(title);
+
+      if (ouvrage && ouvrage.exist === true) {
+        const response = await fetch(`http://localhost:8080/BibliothequeWEB1/emprunter/${title}/${cin}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          console.log(`Ouvrage emprunté by ${cin}`);
+        } else {
           throw new Error('Failed to emprunter ouvrage');
         }
-        console.log(`Ouvrage emprunté by ${cin}`);
-      })
-      .catch(error => {
-        console.error('Error emprunter ouvrage:', error);
-      });
+      } else {
+        console.log('Ouvrage Déjà pris');
+        setIsOuvrageTaken(true);
+        setErrorMessage('Ouvrage Déjà pris');
+      }
+    } catch (error) {
+      console.error('Error emprunter ouvrage:', error);
+      setIsOuvrageTaken(true);
+      setErrorMessage('Error emprunter ouvrage');
+    }
   };
 
   return (
@@ -79,6 +109,8 @@ const AbonneCard = ({ abonne }) => {
         <EmprunterPopup
           onEmprunterSubmit={(title) => emprunterOuvrage(abonne.cin, title)}
           onClose={handleClosePopup}
+          isOuvrageTaken={isOuvrageTaken}
+          errorMessage={errorMessage}
         />
       )}
     </div>

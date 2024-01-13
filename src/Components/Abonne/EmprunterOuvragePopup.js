@@ -1,19 +1,47 @@
+import React, { useState, useEffect } from 'react';
 
-import React, { useState } from 'react';
+const isEmptyObject = (obj) => Object.keys(obj).length === 0;
 
 const EmprunterPopup = ({ onEmprunterSubmit, onClose }) => {
   const [title, setTitle] = useState('');
+  const [suggestions, setSuggestions] = useState({});
 
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/BibliothequeWEB1/${title}`);
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Suggestions:', data);
+          setSuggestions(data);
+        } else {
+          console.log('Empty Suggestions');
+          setSuggestions({});
+        }
+      } catch (error) {
+        console.error('Error fetching suggestions:', error);
+        setSuggestions({});
+      }
+    };
+
+    if (title.trim() !== '') {
+      fetchData();
+    } else {
+      setSuggestions({});
+    }
+  }, [title]);
 
   const handleSubmit = () => {
-    if (title.trim() !== '') {
-      onEmprunterSubmit(title);
+    if (!isEmptyObject(suggestions)) {
+      onEmprunterSubmit(suggestions.titre); 
       setTitle('');
+      setSuggestions({});
     }
   };
+
+  useEffect(() => {
+    console.log('Is suggestions empty?', isEmptyObject(suggestions));
+  }, [suggestions]);
 
   return (
     <div className="emprunter-popup">
@@ -24,9 +52,28 @@ const EmprunterPopup = ({ onEmprunterSubmit, onClose }) => {
           type="text"
           id="title"
           value={title}
-          onChange={handleTitleChange}
+          onChange={(event) => setTitle(event.target.value)}
           placeholder="Ecrire le titre exact de l'ouvrage"
         />
+        {!isEmptyObject(suggestions) && (
+          <div className="suggestions-container">
+            <div className="suggestion-card">
+              <h3>{suggestions.titre}</h3>
+              <p>Date Creation: {suggestions.dateCreation}</p>
+              <p>Disponible: {suggestions.exist ? <p className='Oui'>
+        <div className='OuiDiv'>
+      Oui
+      </div>
+      </p> :
+      <p className='Oui'>
+      <div className='NonDiv'>
+      Non
+      </div>
+      </p>
+      }</p>
+            </div>
+          </div>
+        )}
         <div className="emprunter-popup-buttons">
           <button className="bn5" onClick={handleSubmit}>
             Emprunter
