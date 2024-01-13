@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 
 const Sidebar = ({ activeOption, setActiveOption }) => {
   return (
-    <div className="sidebar">
+    <div className="sidebar-container" >
+<div className="sidebar">
       <h1 className="sidebar-title">Bibliotheque</h1>
       <Link
         to="/"
@@ -42,6 +43,8 @@ const Sidebar = ({ activeOption, setActiveOption }) => {
         Consulter Abonnés
       </Link>
     </div>
+    </div>
+    
   );
 };
 

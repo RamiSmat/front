@@ -67,7 +67,7 @@ const AbonneCard = ({ abonne }) => {
 
       if (ouvrage && ouvrage.exist === true) {
         const response = await fetch(`http://localhost:8080/BibliothequeWEB1/emprunter/${title}/${cin}`, {
-          method: 'POST',
+          method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -95,7 +95,7 @@ const AbonneCard = ({ abonne }) => {
       <img src={getUserAvatar()} className="imageInCardd" alt={abonne.nom} />
       <h3>{abonne.nom}</h3>
       <p>CIN: {abonne.cin}</p>
-      <p>Subscription Number: {abonne.numAbonnement}</p>
+      <p>Numéro Abonnement: {abonne.numAbonnement}</p>
 
       {abonne.ouvrage && buttonText === 'Rendre Ouvrage' && (
         <p>Ouvrage: {abonne.ouvrage.titre}</p>
